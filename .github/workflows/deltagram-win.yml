@@ -30,8 +30,7 @@ jobs:
     steps:
       - name: Prepare directories.
         run: |
-          mkdir %userprofile%\TBuild\Libraries
-          mklink /d %GITHUB_WORKSPACE%\TBuild %userprofile%\TBuild
+          mkdir %GITHUB_WORKSPACE%\TBuild\Libraries
           echo TBUILD=%GITHUB_WORKSPACE%\TBuild>>%GITHUB_ENV%
           echo LibrariesPath=%GITHUB_WORKSPACE%\TBuild\Libraries\win64>>%GITHUB_ENV%
 
@@ -45,6 +44,7 @@ jobs:
           # The source archive shipped to the user has no submodules; CI pulls
           # them recursively here.
           submodules: recursive
+          persist-credentials: true
           path: ${{ env.TBUILD }}\${{ env.REPO_NAME }}
 
       - name: First set up.
