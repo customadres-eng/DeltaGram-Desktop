@@ -1036,7 +1036,9 @@ mac:
 """)
 
 stage('libjxl', """
-    git clone -b v0.12.0 --recursive https://github.com/libjxl/libjxl.git
+    if not exist libjxl\\.git (
+        git clone -b v0.12.0 --recursive https://github.com/libjxl/libjxl.git || (rmdir /Q /S libjxl & git clone -b v0.12.0 --recursive https://github.com/libjxl/libjxl.git)
+    )
     cd libjxl
     cd third_party
     cd brotli
