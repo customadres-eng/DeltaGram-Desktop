@@ -81,6 +81,7 @@ for arg in sys.argv[1:]:
         runCommand.append('shell')
 
 pathPrefixes = [
+    'ThirdParty\\msys64\\ucrt64\\bin',
     'ThirdParty\\jom',
     'ThirdParty\\gyp',
 ] if win else [
@@ -651,6 +652,8 @@ stage('zlib', """
     git checkout e3dc0a85b7032e98380dec011bc8f2c2ee0d8fca
 win:
     cmake . ^
+        -DCMAKE_C_COMPILER=cl ^
+        -DCMAKE_CXX_COMPILER=cl ^
         -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>" ^
         -DCMAKE_C_FLAGS="/DZLIB_WINAPI" ^
         -DZLIB_BUILD_SHARED=OFF ^
