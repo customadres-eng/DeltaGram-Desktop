@@ -1070,6 +1070,8 @@ stage('libjxl', """
 """) + """
 win:
     cmake . ^
+        -DCMAKE_C_COMPILER=cl ^
+        -DCMAKE_CXX_COMPILER=cl ^
         -DCMAKE_INSTALL_PREFIX=%LIBS_DIR%/local ^
         -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>" ^
         -DCMAKE_C_FLAGS="/DJXL_STATIC_DEFINE /DJXL_THREADS_STATIC_DEFINE /DJXL_CMS_STATIC_DEFINE" ^
