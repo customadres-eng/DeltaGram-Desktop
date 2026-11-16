@@ -1210,7 +1210,7 @@ win:
 depends:patches/ffmpeg.patch
     git apply ../patches/ffmpeg.patch
 
-    SET PATH=%THIRDPARTY_DIR%\\msys64\\usr\\bin;%PATH%
+    SET PATH=%PATH%;%THIRDPARTY_DIR%\\msys64\\usr\\bin
     SET CHERE_INVOKING=enabled_from_arguments
     SET MSYS2_PATH_TYPE=inherit
 
