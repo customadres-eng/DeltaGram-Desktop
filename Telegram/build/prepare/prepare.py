@@ -551,8 +551,8 @@ win:
     msys64.exe -y
     del msys64.exe
 
-    bash -c "pacman-key --init; pacman-key --populate; pacman -Syu --noconfirm"
-    pacman -Syu --noconfirm ^
+    bash -c "pacman-key --init; pacman-key --populate; pacman -Syy --noconfirm"
+    pacman -S --noconfirm --needed ^
         gcc ^
         make ^
         mingw-w64-ucrt-x86_64-gcc ^
@@ -1213,7 +1213,9 @@ depends:patches/ffmpeg.patch
     SET PATH=%PATH%;%THIRDPARTY_DIR%\\msys64\\usr\\bin
     SET CHERE_INVOKING=enabled
     SET MSYS2_PATH_TYPE=inherit
-    bash -c "sed -i 's|export PKG_CONFIG_PATH=.*|export PKG_CONFIG_PATH=$(cygpath -u \\"$FullExecPath\\")/../local/lib/pkgconfig:$PKG_CONFIG_PATH|' ../patches/build_ffmpeg_win.sh"
+    if not exist "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig" mkdir "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig"
+    copy /Y "%LIBS_DIR%\\local\\lib\\pkgconfig\\opus.pc" "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig\\opus.pc" >NUL 2>&1
+    copy /Y "%LIBS_DIR%\\local\\lib\\opus.lib" "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\opus.lib" >NUL 2>&1
 
     SET "ARCH_PARAM="
 winarm:
