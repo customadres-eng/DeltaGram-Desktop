@@ -2102,7 +2102,7 @@ win_mac:
 # flushes a cache whose generated source the CI prune had already deleted.
 # The wallet-engine patch rewrites those sources, so it is a dependency here.
 stage('tdesktop_rust', """
-version: 2.""" + tlottieRevision + '.' + walletEngineRevision + """
+version: 3.""" + tlottieRevision + '.' + walletEngineRevision + """
 depends:patches/wallet-engine.patch
 win:
     SET "RUSTUP_HOME=%THIRDPARTY_DIR%\\rust\\rustup"
@@ -2114,7 +2114,7 @@ win32:
     SET "RUST_BUILD_STD=-Z build-std=std,panic_abort"
     SET "RUSTC_BOOTSTRAP=1"
 win64:
-    SET "RUST_TARGET=x86_64-win7-windows-msvc"
+    SET "RUST_TARGET=x86_64-pc-windows-msvc"
     SET "RUST_BUILD_STD=-Z build-std=std,panic_abort"
     SET "RUSTC_BOOTSTRAP=1"
 winarm:
