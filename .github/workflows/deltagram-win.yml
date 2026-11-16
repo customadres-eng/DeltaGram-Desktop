@@ -75,7 +75,9 @@ jobs:
         with:
           path: ${{ env.TBUILD }}\ThirdParty
           key: thirdparty-v1-stable
-          restore-keys: ${{ runner.OS }}-${{ runner.arch }}-third-party-
+          restore-keys: |
+            thirdparty-v3-
+            ${{ runner.OS }}-${{ runner.arch }}-third-party-
 
       - name: Libraries cache.
         uses: actions/cache@v6
@@ -87,7 +89,9 @@ jobs:
             ${{ env.LibrariesPath }}\cache_keys\*
             !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
           key: libs-v2-stable
-          restore-keys: ${{ runner.OS }}-${{ runner.arch }}-libs-v2-
+          restore-keys: |
+            libs-v3-
+            ${{ runner.OS }}-${{ runner.arch }}-libs-v2-
 
       - name: Qt cache.
         uses: actions/cache@v6
@@ -96,7 +100,9 @@ jobs:
             ${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
           key: qt6-stable
-          restore-keys: ${{ runner.OS }}-${{ runner.arch }}-qt6-
+          restore-keys: |
+            qt6-v3-
+            ${{ runner.OS }}-${{ runner.arch }}-qt6-
 
       - name: Libraries.
         run: |
@@ -147,3 +153,24 @@ jobs:
             artifact\
             DeltaGram-win64.zip
           retention-days: 14
+
+      - name: Save libraries cache (always).
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.LibrariesPath }}\*
+            !${{ env.LibrariesPath }}\cache_keys
+            !${{ env.LibrariesPath }}\[qQ]t[_-]*
+            ${{ env.LibrariesPath }}\cache_keys\*
+            !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
+          key: libs-v3-${{ env.CACHE_KEY }}
+
+      - name: Save Qt cache (always).
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.LibrariesPath }}\[qQ]t[_-]*
+            ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
+          key: qt6-v3-${{ env.CACHE_KEY }}
