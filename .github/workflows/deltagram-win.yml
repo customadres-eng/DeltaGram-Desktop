@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ env.TBUILD }}\ThirdParty
-          key: ${{ runner.OS }}-${{ runner.arch }}-third-party-${{ env.CACHE_KEY }}
+          key: thirdparty-v1-stable
           restore-keys: ${{ runner.OS }}-${{ runner.arch }}-third-party-
 
       - name: Libraries cache.
@@ -86,7 +86,7 @@ jobs:
             !${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\*
             !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: ${{ runner.OS }}-${{ runner.arch }}-libs-v2-${{ env.CACHE_KEY }}
+          key: libs-v2-stable
           restore-keys: ${{ runner.OS }}-${{ runner.arch }}-libs-v2-
 
       - name: Qt cache.
@@ -95,7 +95,7 @@ jobs:
           path: |
             ${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: ${{ runner.OS }}-${{ runner.arch }}-qt6-${{ env.CACHE_KEY }}
+          key: qt6-stable
           restore-keys: ${{ runner.OS }}-${{ runner.arch }}-qt6-
 
       - name: Libraries.

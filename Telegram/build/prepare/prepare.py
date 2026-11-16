@@ -1211,7 +1211,7 @@ depends:patches/ffmpeg.patch
     git apply ../patches/ffmpeg.patch
 
     SET PATH=%PATH%;%THIRDPARTY_DIR%\\msys64\\usr\\bin
-    SET CHERE_INVOKING=enabled_from_arguments
+    SET CHERE_INVOKING=enabled
     SET MSYS2_PATH_TYPE=inherit
 
     SET "ARCH_PARAM="
