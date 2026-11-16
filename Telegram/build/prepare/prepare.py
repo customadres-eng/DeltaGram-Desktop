@@ -1213,6 +1213,7 @@ depends:patches/ffmpeg.patch
     SET PATH=%PATH%;%THIRDPARTY_DIR%\\msys64\\usr\\bin
     SET CHERE_INVOKING=enabled
     SET MSYS2_PATH_TYPE=inherit
+    bash -c "sed -i 's|export PKG_CONFIG_PATH=.*|export PKG_CONFIG_PATH=$(cygpath -u \\"$FullExecPath\\")/../local/lib/pkgconfig:$PKG_CONFIG_PATH|' ../patches/build_ffmpeg_win.sh"
 
     SET "ARCH_PARAM="
 winarm:
