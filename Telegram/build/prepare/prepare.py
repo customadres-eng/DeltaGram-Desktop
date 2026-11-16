@@ -1663,6 +1663,7 @@ win:
 release:
     SET CONFIGURATIONS=-debug-and-release
 win:
+    if exist "%LIBS_DIR%\\Qt-%QT%\\bin\\qmake.exe" exit /b 0
     """ + removeDir('"%LIBS_DIR%\\Qt-' + qt + '"') + """
     SET ANGLE_DIR=%LIBS_DIR%\\tg_angle
     SET ANGLE_LIBS_DIR=%ANGLE_DIR%\\out
