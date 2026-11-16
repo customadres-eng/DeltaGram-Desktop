@@ -81,7 +81,6 @@ for arg in sys.argv[1:]:
         runCommand.append('shell')
 
 pathPrefixes = [
-    'ThirdParty\\msys64\\ucrt64\\bin',
     'ThirdParty\\jom',
     'ThirdParty\\gyp',
 ] if win else [
