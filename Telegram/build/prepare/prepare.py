@@ -553,7 +553,9 @@ win:
 
     bash -c "pacman-key --init; pacman-key --populate; pacman -Syu --noconfirm"
     pacman -Syu --noconfirm ^
+        gcc ^
         make ^
+        mingw-w64-ucrt-x86_64-gcc ^
         mingw-w64-ucrt-x86_64-diffutils ^
         mingw-w64-ucrt-x86_64-gperf ^
         mingw-w64-ucrt-x86_64-nasm ^
