@@ -551,6 +551,14 @@ win:
     msys64.exe -y
     del msys64.exe
 
+    REM официальные зеркала MSYS2 из РФ недоступны - ставим публичное зеркало
+    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/msys/x86_64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.msys"
+    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/ucrt64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.mingw"
+    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/ucrt64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.ucrt64"
+    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/clang64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.clang64"
+    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/clang32 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.clang32"
+    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/clangarm64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.clangarm64"
+
     bash -c "pacman-key --init; pacman-key --populate; pacman -Syy --noconfirm"
     pacman -S --noconfirm --needed ^
         gcc ^
