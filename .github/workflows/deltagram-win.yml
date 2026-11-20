@@ -150,16 +150,16 @@ jobs:
           qt6 ^
           -D TDESKTOP_API_ID=34122536 ^
           -D TDESKTOP_API_HASH=8353c14fb75e19919d62f8e74432c51e ^
-          -D CMAKE_CONFIGURATION_TYPES=Release ^
+          -D CMAKE_CONFIGURATION_TYPES=Debug ^
           -D DESKTOP_APP_DISABLE_AUTOUPDATE=ON ^
           -D DESKTOP_APP_DISABLE_CRASH_REPORTS=ON
 
       - name: Build DeltaGram.
-        run: cmake --build %TBUILD%\%REPO_NAME%\out --config Release --parallel
+        run: cmake --build %TBUILD%\%REPO_NAME%\out --config Debug --parallel
 
       - name: Collect artifact.
         run: |
-          set OUT=%TBUILD%\%REPO_NAME%\out\Release
+          set OUT=%TBUILD%\%REPO_NAME%\out\Debug
           mkdir artifact
           copy %OUT%\DeltaGram.exe artifact\
           if exist %OUT%\Updater.exe copy %OUT%\Updater.exe artifact\
