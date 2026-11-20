@@ -279,6 +279,32 @@ def writeCacheKey(stage):
     with open(key, 'w') as file:
         file.write(stage['key'])
 
+def writeOpusPkgConfig():
+    if not win:
+        return
+    lib = os.path.join(libsDir, 'local', 'lib')
+    if not os.path.exists(os.path.join(lib, 'opus.lib')):
+        return
+    prefix = os.path.join(libsDir, 'local').replace('\\', '/')
+    folder = os.path.join(lib, 'pkgconfig')
+    if not os.path.isdir(folder):
+        os.makedirs(folder)
+    content = '\n'.join([
+        'prefix=' + prefix,
+        'exec_prefix=' + prefix,
+        'libdir=' + prefix + '/lib',
+        'includedir=' + prefix + '/include',
+        '',
+        'Name: Opus',
+        'Description: Opus IETF audio codec',
+        'Version: 1.5.2',
+        'Libs: -L' + prefix + '/lib -lopus',
+        'Cflags: -I' + prefix + '/include/opus',
+        '',
+    ])
+    with open(os.path.join(folder, 'opus.pc'), 'w') as file:
+        file.write(content)
+
 stages = []
 
 def removeDir(folder):
@@ -482,6 +508,8 @@ def runStages():
         checkResult = 'Forced' if len(onlyStages) > 0 else checkCacheKey(stage)
         if checkResult == 'Good':
             print('SKIPPING')
+            if stage['name'] == 'opus':
+                writeOpusPkgConfig()
             continue
         elif checkResult == 'NotFound':
             print('NOT FOUND, ', end='')
@@ -522,6 +550,8 @@ def runStages():
             print(prefix + ': FAILED')
             finish(1)
         writeCacheKey(stage)
+        if stage['name'] == 'opus':
+            writeOpusPkgConfig()
 
 if customRunCommand:
     os.chdir(executePath)

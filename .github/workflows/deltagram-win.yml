@@ -115,6 +115,10 @@ jobs:
           echo === top ===
           dir /B "%LibrariesPath%"
 
+      - name: Rebuild opus for the MSVC toolchain.
+        run: |
+          %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat skip-release silent opus <NUL 2>&1
+
       - name: Libraries.
         run: |
           %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat skip-release silent qt6 <NUL 2>&1
