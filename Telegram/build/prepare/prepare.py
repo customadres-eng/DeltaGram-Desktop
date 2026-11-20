@@ -283,7 +283,10 @@ stages = []
 
 def removeDir(folder):
     if win:
-        return 'if exist ' + folder + ' rmdir /Q /S ' + folder + '\nif exist ' + folder + ' exit /b 1'
+        return ('if exist ' + folder + ' attrib -R /S /D ' + folder + '\\* >NUL 2>&1\n'
+            + 'if exist ' + folder + ' rmdir /Q /S ' + folder + ' >NUL 2>&1\n'
+            + 'if exist ' + folder + ' rmdir /Q /S ' + folder + '\n'
+            + 'if exist ' + folder + ' (echo ERROR: cannot remove ' + folder + ' & exit /b 1)')
     return 'rm -rf ' + folder
 
 def setVar(key, multilineValue):
