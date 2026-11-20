@@ -1229,6 +1229,8 @@ depends:patches/ffmpeg.patch
     SET CHERE_INVOKING=enabled
     SET MSYS2_PATH_TYPE=inherit
     if not exist "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig" mkdir "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig"
+    if exist "%LIBS_DIR%\\local\\lib\\pkgconfig\\opus.pc" (echo OPUS PC FOUND) else (echo OPUS PC MISSING)
+    if exist "%LIBS_DIR%\\local\\lib\\opus.lib" (echo OPUS LIB FOUND) else (echo OPUS LIB MISSING)
     if exist "%LIBS_DIR%\\local\\lib\\pkgconfig\\opus.pc" copy /Y "%LIBS_DIR%\\local\\lib\\pkgconfig\\opus.pc" "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig\\opus.pc" >NUL || ver >NUL
     if exist "%LIBS_DIR%\\local\\lib\\opus.lib" copy /Y "%LIBS_DIR%\\local\\lib\\opus.lib" "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\opus.lib" >NUL || ver >NUL
 

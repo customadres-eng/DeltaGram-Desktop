@@ -104,6 +104,17 @@ jobs:
             qt6-v3-
             ${{ runner.OS }}-${{ runner.arch }}-qt6-
 
+      - name: Inspect restored libraries.
+        run: |
+          echo === pkgconfig ===
+          if exist "%LibrariesPath%\local\lib\pkgconfig" dir /B "%LibrariesPath%\local\lib\pkgconfig"
+          echo === local\lib ===
+          if exist "%LibrariesPath%\local\lib" dir /B "%LibrariesPath%\local\lib"
+          echo === cache_keys ===
+          if exist "%LibrariesPath%\cache_keys" dir /B "%LibrariesPath%\cache_keys"
+          echo === top ===
+          dir /B "%LibrariesPath%"
+
       - name: Libraries.
         run: |
           %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat skip-release silent qt6 <NUL 2>&1
