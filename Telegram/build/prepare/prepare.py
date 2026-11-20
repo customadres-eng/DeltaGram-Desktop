@@ -1258,6 +1258,10 @@ depends:patches/ffmpeg.patch
     SET PATH=%PATH%;%THIRDPARTY_DIR%\\msys64\\usr\\bin
     SET CHERE_INVOKING=enabled
     SET MSYS2_PATH_TYPE=inherit
+    if not exist "%LIBS_DIR%\\bin-shims" mkdir "%LIBS_DIR%\\bin-shims"
+    copy /Y "%THIRDPARTY_DIR%\\msys64\\usr\\bin\\gawk.exe" "%LIBS_DIR%\\bin-shims\\awk.exe" >NUL
+    SET PATH=%LIBS_DIR%\\bin-shims;%PATH%
+    bash --login -c "type -a awk || true"
     if not exist "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig" mkdir "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig"
     if exist "%LIBS_DIR%\\local\\lib\\pkgconfig\\opus.pc" (echo OPUS PC FOUND) else (echo OPUS PC MISSING)
     if exist "%LIBS_DIR%\\local\\lib\\opus.lib" (echo OPUS LIB FOUND) else (echo OPUS LIB MISSING)
