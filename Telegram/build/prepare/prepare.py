@@ -550,6 +550,10 @@ def runStages():
             with open(os.path.join(stage['directory'], 'fix_ffmpeg_awk.sed'), 'w',
                     newline='\n') as file:
                 file.write('s|gsub(/\\\\\\\\/, "/")|gsub(/\\\\\\\\\\\\\\\\/, "/")|\n')
+            with open(os.path.join(stage['directory'], 'fix_ffmpeg_lib.sed'), 'w',
+                    newline='\n') as file:
+                file.write('s|echo \\$^ > \\$@\\.objs|$(file >$@.objs,$^ )|\n')
+                file.write('s|@\\$@\\.objs|@$(subst /,\\\\,$(abspath $@).objs)|\n')
         if not run(commands, stageEnvironment):
             print(prefix + ': FAILED')
             finish(1)
@@ -1278,6 +1282,7 @@ winarm:
 win:
 depends:patches/build_ffmpeg_win.sh
     bash -lc "sed -i -f ../fix_ffmpeg_awk.sed configure && grep -n 'gsub(/' configure"
+    bash -lc "sed -i -f ../fix_ffmpeg_lib.sed ffbuild/library.mak && sed -n '36,46p' ffbuild/library.mak"
     bash --login ../patches/build_ffmpeg_win.sh
 mac:
     export PKG_CONFIG_PATH=$USED_PREFIX/lib/pkgconfig
