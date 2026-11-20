@@ -607,9 +607,7 @@ win:
     if exist "%THIRDPARTY_DIR%\\msys64\\var\\lib\\pacman\\db.lck" del /Q "%THIRDPARTY_DIR%\\msys64\\var\\lib\\pacman\\db.lck"
     bash -c "pacman -Syy --noconfirm || (sleep 5 && rm -f /var/lib/pacman/db.lck && pacman -Syy --noconfirm)"
     pacman -S --noconfirm --needed ^
-        gcc ^
         make ^
-        mingw-w64-ucrt-x86_64-gcc ^
         mingw-w64-ucrt-x86_64-diffutils ^
         mingw-w64-ucrt-x86_64-gperf ^
         mingw-w64-ucrt-x86_64-nasm ^
