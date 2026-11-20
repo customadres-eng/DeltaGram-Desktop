@@ -552,8 +552,9 @@ def runStages():
                 file.write('s|gsub(/\\\\\\\\/, "/")|gsub(/\\\\\\\\\\\\\\\\/, "/")|\n')
             with open(os.path.join(stage['directory'], 'fix_ffmpeg_lib.sed'), 'w',
                     newline='\n') as file:
-                file.write('s|echo \\$^ > \\$@\\.objs|$(file >$@.objs,$^ )|\n')
-                file.write('s|@\\$@\\.objs|@$(subst /,\\\\,$(abspath $@).objs)|\n')
+                file.write('s|echo \\$^ > \\$@\\.objs|$(file >$(notdir $@).objs,$^ )|\n')
+                file.write('s|@\\$@\\.objs|@$(notdir $@).objs|\n')
+                file.write('s|-\\$(RM) \\$@\\.objs|-$(RM) $(notdir $@).objs|\n')
         if not run(commands, stageEnvironment):
             print(prefix + ': FAILED')
             finish(1)
