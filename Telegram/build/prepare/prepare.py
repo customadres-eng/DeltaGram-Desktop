@@ -376,7 +376,10 @@ def winFailOnEach(command):
 
 def printCommands(commands):
     print('---------------------------------COMMANDS-LIST----------------------------------')
-    print(commands, end='')
+    try:
+        print(commands, end='')
+    except UnicodeEncodeError:
+        print(commands.encode('ascii', 'backslashreplace').decode('ascii'), end='')
     print('--------------------------------------------------------------------------------')
 
 def run(commands, env = None):
@@ -553,14 +556,6 @@ win:
     curl.exe -L --retry 5 --retry-delay 5 --retry-all-errors -o msys64.exe https://github.com/msys2/msys2-installer/releases/download/2026-09-27/msys2-base-x86_64-20260927.sfx.exe
     msys64.exe -y
     del msys64.exe
-
-    REM официальные зеркала MSYS2 из РФ недоступны - ставим публичное зеркало
-    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/msys/x86_64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.msys"
-    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/ucrt64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.mingw"
-    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/ucrt64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.ucrt64"
-    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/clang64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.clang64"
-    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/clang32 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.clang32"
-    echo Server = https://mirrors.tuna.tsinghua.edu.cn/msys2/mingw/clangarm64 > "%THIRDPARTY_DIR%\msys64\etc\pacman.d\mirrorlist.clangarm64"
 
     bash -c "pacman-key --init; pacman-key --populate; pacman -Syy --noconfirm"
     pacman -S --noconfirm --needed ^
