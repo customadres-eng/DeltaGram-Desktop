@@ -283,9 +283,9 @@ stages = []
 
 def removeDir(folder):
     if win:
-        return ('if exist ' + folder + ' attrib -R /S /D ' + folder + '\\* >NUL 2>&1\n'
-            + 'if exist ' + folder + ' rmdir /Q /S ' + folder + ' >NUL 2>&1\n'
-            + 'if exist ' + folder + ' rmdir /Q /S ' + folder + '\n'
+        return ('if exist ' + folder + ' (attrib -R /S /D ' + folder + '\\* >NUL 2>&1 & '
+            + 'rmdir /Q /S ' + folder + ' >NUL 2>&1 & '
+            + 'rmdir /Q /S ' + folder + ' >NUL 2>&1 & ver >NUL)\n'
             + 'if exist ' + folder + ' (echo ERROR: cannot remove ' + folder + ' & exit /b 1)')
     return 'rm -rf ' + folder
 
@@ -360,6 +360,7 @@ def winFailOnEach(command):
     commands = command.split('\n')
     result = ''
     startingCommand = True
+    index = 0
     for command in commands:
         command = re.sub(r'\$([A-Za-z0-9_]+)', r'%\1%', command)
         if re.search(r'\$[^<]', command):
@@ -367,19 +368,25 @@ def winFailOnEach(command):
         appendCall = startingCommand and not re.match(r'(if|for) ', command)
         called = 'call ' + command if appendCall else command
         result = result + called
+        index += 1
         if command.endswith('^'):
             startingCommand = False
         else:
             startingCommand = True
-            result = result + '\r\nif %errorlevel% neq 0 exit /b %errorlevel%\r\n'
+            result = result + ('\r\nif %errorlevel% neq 0 (echo STAGE COMMAND #'
+                + str(index) + ' FAILED & exit /b %errorlevel%)\r\n')
     return result
 
 def printCommands(commands):
     print('---------------------------------COMMANDS-LIST----------------------------------')
-    try:
-        print(commands, end='')
-    except UnicodeEncodeError:
-        print(commands.encode('ascii', 'backslashreplace').decode('ascii'), end='')
+    index = 0
+    for line in commands.split('\n'):
+        index += 1
+        try:
+            print('#' + str(index) + '| ' + line)
+        except UnicodeEncodeError:
+            print('#' + str(index) + '| '
+                + line.encode('ascii', 'backslashreplace').decode('ascii'))
     print('--------------------------------------------------------------------------------')
 
 def run(commands, env = None):
@@ -557,7 +564,9 @@ win:
     msys64.exe -y
     del msys64.exe
 
-    bash -c "pacman-key --init; pacman-key --populate; pacman -Syy --noconfirm"
+    bash -c "pacman-key --init; pacman-key --populate"
+    if exist "%THIRDPARTY_DIR%\\msys64\\var\\lib\\pacman\\db.lck" del /Q "%THIRDPARTY_DIR%\\msys64\\var\\lib\\pacman\\db.lck"
+    bash -c "pacman -Syy --noconfirm || (sleep 5 && rm -f /var/lib/pacman/db.lck && pacman -Syy --noconfirm)"
     pacman -S --noconfirm --needed ^
         gcc ^
         make ^
@@ -1220,8 +1229,8 @@ depends:patches/ffmpeg.patch
     SET CHERE_INVOKING=enabled
     SET MSYS2_PATH_TYPE=inherit
     if not exist "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig" mkdir "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig"
-    copy /Y "%LIBS_DIR%\\local\\lib\\pkgconfig\\opus.pc" "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig\\opus.pc" >NUL 2>&1
-    copy /Y "%LIBS_DIR%\\local\\lib\\opus.lib" "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\opus.lib" >NUL 2>&1
+    if exist "%LIBS_DIR%\\local\\lib\\pkgconfig\\opus.pc" copy /Y "%LIBS_DIR%\\local\\lib\\pkgconfig\\opus.pc" "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\pkgconfig\\opus.pc" >NUL || ver >NUL
+    if exist "%LIBS_DIR%\\local\\lib\\opus.lib" copy /Y "%LIBS_DIR%\\local\\lib\\opus.lib" "%THIRDPARTY_DIR%\\msys64\\ucrt64\\lib\\opus.lib" >NUL || ver >NUL
 
     SET "ARCH_PARAM="
 winarm:
