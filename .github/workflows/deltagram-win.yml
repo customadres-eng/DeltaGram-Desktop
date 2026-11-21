@@ -224,9 +224,18 @@ jobs:
           -D DESKTOP_APP_DISABLE_CRASH_REPORTS=ON
 
       - name: Build DeltaGram.
+        shell: cmd
         run: |
           set CL=/Zm1500
-          cmake --build %TBUILD%\%REPO_NAME%\out --config Release --parallel 3
+          set ATTEMPT=1
+          :retry
+          cmake --build %TBUILD%\%REPO_NAME%\out --config Release --parallel 2
+          if not errorlevel 1 goto done
+          echo Build attempt %ATTEMPT% failed, resuming
+          set /a ATTEMPT+=1
+          if %ATTEMPT% GTR 5 exit /b 1
+          goto retry
+          :done
 
       - name: Collect artifact.
         run: |
