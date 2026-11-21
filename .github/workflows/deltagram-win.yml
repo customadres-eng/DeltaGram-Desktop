@@ -133,10 +133,12 @@ jobs:
             !${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\*
             !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: libs-v2-stable
+          key: libs-v7-${{ env.CACHE_KEY }}
           restore-keys: |
+            libs-v6-
             libs-v5-
             libs-v3-
+            libs-v2-stable
             ${{ runner.OS }}-${{ runner.arch }}-libs-v2-
 
       - name: Qt cache.
@@ -145,10 +147,12 @@ jobs:
           path: |
             ${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: qt6-stable
+          key: qt6-v7-${{ env.CACHE_KEY }}
           restore-keys: |
+            qt6-v6-
             qt6-v5-
             qt6-v3-
+            qt6-stable
             ${{ runner.OS }}-${{ runner.arch }}-qt6-
 
       - name: Inspect restored libraries.
@@ -273,7 +277,7 @@ jobs:
             !${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\*
             !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: libs-v6-${{ env.CACHE_KEY }}
+          key: libs-v7-${{ env.CACHE_KEY }}
 
       - name: Save Qt cache (always).
         if: always()
@@ -282,4 +286,4 @@ jobs:
           path: |
             ${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: qt6-v6-${{ env.CACHE_KEY }}
+          key: qt6-v7-${{ env.CACHE_KEY }}
