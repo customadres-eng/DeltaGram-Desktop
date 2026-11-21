@@ -224,7 +224,9 @@ jobs:
           -D DESKTOP_APP_DISABLE_CRASH_REPORTS=ON
 
       - name: Build DeltaGram.
-        run: cmake --build %TBUILD%\%REPO_NAME%\out --config Release --parallel
+        run: |
+          set CL=/Zm1500
+          cmake --build %TBUILD%\%REPO_NAME%\out --config Release --parallel 3
 
       - name: Collect artifact.
         run: |
