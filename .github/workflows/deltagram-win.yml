@@ -120,6 +120,9 @@ jobs:
           if not exist "%LibrariesPath%\mozjpeg\Debug\jpeg-static.lib" (
             if exist "%LibrariesPath%\mozjpeg" rmdir /S /Q "%LibrariesPath%\mozjpeg"
           )
+          if not exist "%LibrariesPath%\libavif\Debug\avif.lib" (
+            if exist "%LibrariesPath%\libavif" rmdir /S /Q "%LibrariesPath%\libavif"
+          )
           if not exist "%LibrariesPath%\local\lib\libheif.a" exit /b 0
           del /Q "%LibrariesPath%\local\lib\libheif.a" 2>NUL
           del /Q "%LibrariesPath%\local\lib\pkgconfig\libheif.pc" 2>NUL
