@@ -90,6 +90,7 @@ jobs:
             !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
           key: libs-v2-stable
           restore-keys: |
+            libs-v5-
             libs-v3-
             ${{ runner.OS }}-${{ runner.arch }}-libs-v2-
 
@@ -101,6 +102,7 @@ jobs:
             ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
           key: qt6-stable
           restore-keys: |
+            qt6-v5-
             qt6-v3-
             ${{ runner.OS }}-${{ runner.arch }}-qt6-
 
