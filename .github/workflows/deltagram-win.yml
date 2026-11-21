@@ -118,17 +118,29 @@ jobs:
       - name: Drop libraries built with the GCC toolchain.
         run: |
           if not exist "%LibrariesPath%\mozjpeg\Debug\jpeg-static.lib" if exist "%LibrariesPath%\mozjpeg" rmdir /S /Q "%LibrariesPath%\mozjpeg"
+          if not exist "%LibrariesPath%\mozjpeg\Release\jpeg-static.lib" if exist "%LibrariesPath%\mozjpeg" rmdir /S /Q "%LibrariesPath%\mozjpeg"
           if not exist "%LibrariesPath%\libavif\Debug\avif.lib" if exist "%LibrariesPath%\libavif" rmdir /S /Q "%LibrariesPath%\libavif"
+          if not exist "%LibrariesPath%\libavif\Release\avif.lib" if exist "%LibrariesPath%\libavif" rmdir /S /Q "%LibrariesPath%\libavif"
           if not exist "%LibrariesPath%\rnnoise\out\Debug\rnnoise.lib" if exist "%LibrariesPath%\rnnoise" rmdir /S /Q "%LibrariesPath%\rnnoise"
+          if not exist "%LibrariesPath%\rnnoise\out\Release\rnnoise.lib" if exist "%LibrariesPath%\rnnoise" rmdir /S /Q "%LibrariesPath%\rnnoise"
           if not exist "%LibrariesPath%\openh264\builddir-debug\libopenh264.a" if exist "%LibrariesPath%\openh264" rmdir /S /Q "%LibrariesPath%\openh264"
+          if not exist "%LibrariesPath%\openh264\builddir-release\libopenh264.a" if exist "%LibrariesPath%\openh264" rmdir /S /Q "%LibrariesPath%\openh264"
           if not exist "%LibrariesPath%\dav1d\builddir-debug\src\libdav1d.a" if exist "%LibrariesPath%\dav1d" rmdir /S /Q "%LibrariesPath%\dav1d"
+          if not exist "%LibrariesPath%\dav1d\builddir-release\src\libdav1d.a" if exist "%LibrariesPath%\dav1d" rmdir /S /Q "%LibrariesPath%\dav1d"
           if not exist "%LibrariesPath%\zlib\Debug\libzsd.lib" if exist "%LibrariesPath%\zlib" rmdir /S /Q "%LibrariesPath%\zlib"
+          if not exist "%LibrariesPath%\zlib\Release\libzs.lib" if exist "%LibrariesPath%\zlib" rmdir /S /Q "%LibrariesPath%\zlib"
           if not exist "%LibrariesPath%\liblcms2\out\Debug\src\liblcms2.a" if exist "%LibrariesPath%\liblcms2" rmdir /S /Q "%LibrariesPath%\liblcms2"
+          if not exist "%LibrariesPath%\liblcms2\out\Release\src\liblcms2.a" if exist "%LibrariesPath%\liblcms2" rmdir /S /Q "%LibrariesPath%\liblcms2"
           if not exist "%LibrariesPath%\libwebp\out\debug-static" if exist "%LibrariesPath%\libwebp" rmdir /S /Q "%LibrariesPath%\libwebp"
+          if not exist "%LibrariesPath%\libwebp\out\release-static" if exist "%LibrariesPath%\libwebp" rmdir /S /Q "%LibrariesPath%\libwebp"
           if not exist "%LibrariesPath%\openssl3\out.dbg\libssl.lib" if exist "%LibrariesPath%\openssl3" rmdir /S /Q "%LibrariesPath%\openssl3"
+          if not exist "%LibrariesPath%\openssl3\out\libssl.lib" if exist "%LibrariesPath%\openssl3" rmdir /S /Q "%LibrariesPath%\openssl3"
           if not exist "%LibrariesPath%\tg_angle\out\Debug\tg_angle.lib" if exist "%LibrariesPath%\tg_angle" rmdir /S /Q "%LibrariesPath%\tg_angle"
+          if not exist "%LibrariesPath%\tg_angle\out\Release\tg_angle.lib" if exist "%LibrariesPath%\tg_angle" rmdir /S /Q "%LibrariesPath%\tg_angle"
           if not exist "%LibrariesPath%\ada\out\src\Debug\ada.lib" if exist "%LibrariesPath%\ada" rmdir /S /Q "%LibrariesPath%\ada"
+          if not exist "%LibrariesPath%\ada\out\src\Release\ada.lib" if exist "%LibrariesPath%\ada" rmdir /S /Q "%LibrariesPath%\ada"
           if not exist "%LibrariesPath%\tg_owt\out\Debug" if exist "%LibrariesPath%\tg_owt" rmdir /S /Q "%LibrariesPath%\tg_owt"
+          if not exist "%LibrariesPath%\tg_owt\out\Release" if exist "%LibrariesPath%\tg_owt" rmdir /S /Q "%LibrariesPath%\tg_owt"
           if not exist "%LibrariesPath%\local\lib\libheif.a" exit /b 0
           del /Q "%LibrariesPath%\local\lib\libheif.a" 2>NUL
           del /Q "%LibrariesPath%\local\lib\pkgconfig\libheif.pc" 2>NUL
@@ -140,11 +152,11 @@ jobs:
 
       - name: Rebuild opus for the MSVC toolchain.
         run: |
-          %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat skip-release silent opus <NUL 2>&1
+          %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat silent opus <NUL 2>&1
 
       - name: Libraries.
         run: |
-          %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat skip-release silent qt6 <NUL 2>&1
+          %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat silent qt6 <NUL 2>&1
 
       - name: Free up some disk space.
         shell: bash
@@ -159,17 +171,17 @@ jobs:
           qt6 ^
           -D TDESKTOP_API_ID=34122536 ^
           -D TDESKTOP_API_HASH=8353c14fb75e19919d62f8e74432c51e ^
-          -D CMAKE_CONFIGURATION_TYPES=Debug ^
+          -D CMAKE_CONFIGURATION_TYPES=Release ^
           -D CMAKE_EXE_LINKER_FLAGS=dnsapi.lib ^
           -D DESKTOP_APP_DISABLE_AUTOUPDATE=ON ^
           -D DESKTOP_APP_DISABLE_CRASH_REPORTS=ON
 
       - name: Build DeltaGram.
-        run: cmake --build %TBUILD%\%REPO_NAME%\out --config Debug --parallel
+        run: cmake --build %TBUILD%\%REPO_NAME%\out --config Release --parallel
 
       - name: Collect artifact.
         run: |
-          set OUT=%TBUILD%\%REPO_NAME%\out\Debug
+          set OUT=%TBUILD%\%REPO_NAME%\out\Release
           mkdir artifact
           copy %OUT%\DeltaGram.exe artifact\
           if exist %OUT%\Updater.exe copy %OUT%\Updater.exe artifact\
@@ -203,7 +215,7 @@ jobs:
             !${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\*
             !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: libs-v5-${{ env.CACHE_KEY }}
+          key: libs-v6-${{ env.CACHE_KEY }}
 
       - name: Save Qt cache (always).
         if: always()
@@ -212,4 +224,4 @@ jobs:
           path: |
             ${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: qt6-v5-${{ env.CACHE_KEY }}
+          key: qt6-v6-${{ env.CACHE_KEY }}
