@@ -193,7 +193,7 @@ jobs:
             !${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\*
             !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: libs-v3-${{ env.CACHE_KEY }}
+          key: libs-v5-${{ env.CACHE_KEY }}
 
       - name: Save Qt cache (always).
         if: always()
@@ -202,4 +202,4 @@ jobs:
           path: |
             ${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: qt6-v3-${{ env.CACHE_KEY }}
+          key: qt6-v5-${{ env.CACHE_KEY }}
