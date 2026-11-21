@@ -65,6 +65,28 @@ jobs:
           sdk: ${{ env.SDK }}
           toolset: 14.44
 
+      - name: Add the ATL headers breakpad needs.
+        shell: powershell
+        run: |
+          $root = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer"
+          $path = & "$root\vswhere.exe" -latest -products * -property installationPath
+          if (-not $path) { throw "Visual Studio installation not found" }
+          $found = Get-ChildItem "$path\VC\Tools\MSVC" -Recurse -Filter atlbase.h -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($found) {
+            Write-Output "ATL already present: $($found.FullName)"
+            exit 0
+          }
+          Write-Output "Installing ATL into $path"
+          $process = Start-Process -FilePath "$root\vs_installer.exe" -ArgumentList @(
+            "modify", "--installPath", "`"$path`"",
+            "--add", "Microsoft.VisualStudio.Component.VC.ATL",
+            "--quiet", "--norestart", "--wait"
+          ) -Wait -PassThru
+          Write-Output "installer exit code: $($process.ExitCode)"
+          $found = Get-ChildItem "$path\VC\Tools\MSVC" -Recurse -Filter atlbase.h -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $found) { throw "ATL headers are still missing" }
+          Write-Output "ATL installed: $($found.FullName)"
+
       - name: NuGet sources.
         run: |
           nuget sources Disable -Name "Microsoft Visual Studio Offline Packages"
