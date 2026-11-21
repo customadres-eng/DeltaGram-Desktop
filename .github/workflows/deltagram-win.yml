@@ -117,12 +117,18 @@ jobs:
 
       - name: Drop libraries built with the GCC toolchain.
         run: |
-          if not exist "%LibrariesPath%\mozjpeg\Debug\jpeg-static.lib" (
-            if exist "%LibrariesPath%\mozjpeg" rmdir /S /Q "%LibrariesPath%\mozjpeg"
-          )
-          if not exist "%LibrariesPath%\libavif\Debug\avif.lib" (
-            if exist "%LibrariesPath%\libavif" rmdir /S /Q "%LibrariesPath%\libavif"
-          )
+          if not exist "%LibrariesPath%\mozjpeg\Debug\jpeg-static.lib" if exist "%LibrariesPath%\mozjpeg" rmdir /S /Q "%LibrariesPath%\mozjpeg"
+          if not exist "%LibrariesPath%\libavif\Debug\avif.lib" if exist "%LibrariesPath%\libavif" rmdir /S /Q "%LibrariesPath%\libavif"
+          if not exist "%LibrariesPath%\rnnoise\out\Debug\rnnoise.lib" if exist "%LibrariesPath%\rnnoise" rmdir /S /Q "%LibrariesPath%\rnnoise"
+          if not exist "%LibrariesPath%\openh264\builddir-debug\libopenh264.a" if exist "%LibrariesPath%\openh264" rmdir /S /Q "%LibrariesPath%\openh264"
+          if not exist "%LibrariesPath%\dav1d\builddir-debug\src\libdav1d.a" if exist "%LibrariesPath%\dav1d" rmdir /S /Q "%LibrariesPath%\dav1d"
+          if not exist "%LibrariesPath%\zlib\Debug\libzsd.lib" if exist "%LibrariesPath%\zlib" rmdir /S /Q "%LibrariesPath%\zlib"
+          if not exist "%LibrariesPath%\liblcms2\out\Debug\src\liblcms2.a" if exist "%LibrariesPath%\liblcms2" rmdir /S /Q "%LibrariesPath%\liblcms2"
+          if not exist "%LibrariesPath%\libwebp\out\debug-static" if exist "%LibrariesPath%\libwebp" rmdir /S /Q "%LibrariesPath%\libwebp"
+          if not exist "%LibrariesPath%\openssl3\out.dbg\libssl.lib" if exist "%LibrariesPath%\openssl3" rmdir /S /Q "%LibrariesPath%\openssl3"
+          if not exist "%LibrariesPath%\tg_angle\out\Debug\tg_angle.lib" if exist "%LibrariesPath%\tg_angle" rmdir /S /Q "%LibrariesPath%\tg_angle"
+          if not exist "%LibrariesPath%\ada\out\src\Debug\ada.lib" if exist "%LibrariesPath%\ada" rmdir /S /Q "%LibrariesPath%\ada"
+          if not exist "%LibrariesPath%\tg_owt\out\Debug" if exist "%LibrariesPath%\tg_owt" rmdir /S /Q "%LibrariesPath%\tg_owt"
           if not exist "%LibrariesPath%\local\lib\libheif.a" exit /b 0
           del /Q "%LibrariesPath%\local\lib\libheif.a" 2>NUL
           del /Q "%LibrariesPath%\local\lib\pkgconfig\libheif.pc" 2>NUL
