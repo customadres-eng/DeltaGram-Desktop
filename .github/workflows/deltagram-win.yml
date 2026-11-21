@@ -65,27 +65,50 @@ jobs:
           sdk: ${{ env.SDK }}
           toolset: 14.44
 
-      - name: Add the ATL headers breakpad needs.
+      - name: Add the ATL headers the pinned toolset is missing.
         shell: powershell
         run: |
           $root = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer"
           $path = & "$root\vswhere.exe" -latest -products * -property installationPath
           if (-not $path) { throw "Visual Studio installation not found" }
-          $found = Get-ChildItem "$path\VC\Tools\MSVC" -Recurse -Filter atlbase.h -ErrorAction SilentlyContinue | Select-Object -First 1
-          if ($found) {
-            Write-Output "ATL already present: $($found.FullName)"
+          $toolset = $env:VCToolsVersion.Trim()
+          if (-not $toolset -and $env:VCToolsInstallDir) {
+            $toolset = Split-Path $env:VCToolsInstallDir -Leaf
+          }
+          if (-not $toolset) { throw "Cannot detect the MSVC toolset version" }
+          Write-Output "toolset: $toolset"
+          $destination = "$path\VC\Tools\MSVC\$toolset\atlmfc"
+          if (Test-Path "$destination\include\atlbase.h") {
+            Write-Output "ATL already present for this toolset"
             exit 0
           }
-          Write-Output "Installing ATL into $path"
-          $process = Start-Process -FilePath "$root\vs_installer.exe" -ArgumentList @(
-            "modify", "--installPath", "`"$path`"",
-            "--add", "Microsoft.VisualStudio.Component.VC.ATL",
-            "--quiet", "--norestart", "--wait"
-          ) -Wait -PassThru
-          Write-Output "installer exit code: $($process.ExitCode)"
-          $found = Get-ChildItem "$path\VC\Tools\MSVC" -Recurse -Filter atlbase.h -ErrorAction SilentlyContinue | Select-Object -First 1
-          if (-not $found) { throw "ATL headers are still missing" }
-          Write-Output "ATL installed: $($found.FullName)"
+          $source = Get-ChildItem "$path\VC\Tools\MSVC" -Directory |
+            Where-Object { Test-Path "$($_.FullName)\atlmfc\include\atlbase.h" } |
+            Sort-Object Name -Descending |
+            Select-Object -First 1
+          if (-not $source) {
+            Write-Output "Installing ATL into $path"
+            $process = Start-Process -FilePath "$root\vs_installer.exe" -ArgumentList @(
+              "modify", "--installPath", "`"$path`"",
+              "--add", "Microsoft.VisualStudio.Component.VC.ATL",
+              "--quiet", "--norestart", "--wait"
+            ) -Wait -PassThru
+            Write-Output "installer exit code: $($process.ExitCode)"
+            $source = Get-ChildItem "$path\VC\Tools\MSVC" -Directory |
+              Where-Object { Test-Path "$($_.FullName)\atlmfc\include\atlbase.h" } |
+              Sort-Object Name -Descending |
+              Select-Object -First 1
+          }
+          if (-not $source) { throw "ATL headers are missing everywhere" }
+          Write-Output "copying ATL from $($source.Name) to $toolset"
+          New-Item -ItemType Directory -Force "$destination\include" | Out-Null
+          Copy-Item "$($source.FullName)\atlmfc\include\*" "$destination\include" -Recurse -Force
+          if (Test-Path "$($source.FullName)\atlmfc\lib") {
+            New-Item -ItemType Directory -Force "$destination\lib" | Out-Null
+            Copy-Item "$($source.FullName)\atlmfc\lib\*" "$destination\lib" -Recurse -Force
+          }
+          if (-not (Test-Path "$destination\include\atlbase.h")) { throw "ATL copy failed" }
+          Write-Output "ATL ready: $destination"
 
       - name: NuGet sources.
         run: |
