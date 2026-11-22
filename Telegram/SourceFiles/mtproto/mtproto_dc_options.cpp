@@ -29,9 +29,8 @@ struct BuiltInDc {
 };
 
 const BuiltInDc kBuiltInDcs[] = {
-	// DeltaGram's public server. The full DC list is delivered by the server
-	// itself through help.getConfig; only the first connection endpoint has to
-	// be baked in here.
+	// DeltaGram's public server. Every DC id is served from this endpoint;
+	// addresses advertised by servers or saved configs are ignored below.
 	{ 2, "150.241.69.39", 2398 },
 };
 
@@ -283,21 +282,28 @@ bool DcOptions::ApplyOneOption(
 		base::flat_map<DcId, std::vector<Endpoint>> &data,
 		DcId dcId,
 		Flags flags,
-		const std::string &ip,
-		int port,
+		const std::string &,
+		int,
 		const bytes::vector &secret) {
+	// DeltaGram is served from a single host: every DC id is routed to the
+	// built-in endpoint, so the client can't migrate to a foreign Telegram DC.
+	const auto &builtIn = kBuiltInDcs[0];
+	const auto host = std::string(builtIn.ip);
+	const auto fixedPort = builtIn.port;
 	auto i = data.find(dcId);
 	if (i != data.cend()) {
 		for (auto &endpoint : i->second) {
-			if (endpoint.ip == ip && endpoint.port == port) {
+			if (endpoint.ip == host
+				&& endpoint.port == fixedPort
+				&& endpoint.flags.value() == flags.value()) {
 				return false;
 			}
 		}
-		i->second.emplace_back(dcId, flags, ip, port, secret);
+		i->second.emplace_back(dcId, flags, host, fixedPort, secret);
 	} else {
 		data.emplace(dcId, std::vector<Endpoint>(
 			1,
-			Endpoint(dcId, flags, ip, port, secret)));
+			Endpoint(dcId, flags, host, fixedPort, secret)));
 	}
 	return true;
 }
